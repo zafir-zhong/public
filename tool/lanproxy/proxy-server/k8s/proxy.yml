@@ -1,0 +1,133 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: lan-proxy-config
+  namespace: tool
+data:
+  # example of a simple property defined using --from-literal
+  config: "
+server.bind=0.0.0.0\n
+server.port=4900\n
+
+server.ssl.enable=true\n
+server.ssl.bind=0.0.0.0\n
+server.ssl.port=4993\n
+server.ssl.jksPath=home.jks\n
+server.ssl.keyStorePassword=123456\n
+server.ssl.keyManagerPassword=123456\n
+server.ssl.needsClientAuth=false\n
+config.server.bind=0.0.0.0\n
+config.server.port=8090\n
+config.admin.username=test\n
+config.admin.password=testabcd\n
+  "
+  # example of a complex property defined using --from-file
+  #example.property.file: |-
+  #property.1=value-1
+  #property.2=value-2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxy
+  namespace: tool
+  labels:
+    app: proxy
+spec:
+  type: NodePort
+  sessionAffinity: ClientIP
+  ports:
+    - name: proxy-admin
+      port: 8090
+      targetPort: 8090
+      nodePort: 30809
+    - name: proxy-service
+      port: 4993
+      targetPort: 4993
+      nodePort: 30993
+    - name: proxy-out
+      port: 80
+      targetPort: 80
+      nodePort: 30008
+  selector:
+    project: ms
+    app: proxy
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proxy
+  namespace: tool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      project: ms
+      app: proxy
+  template:
+    metadata:
+      labels:
+        project: ms
+        app: proxy
+    spec:
+      affinity:        # 配置节点亲和
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: proxydata
+                    operator: In
+                    values:
+                      - "true"
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 10 #当删除Pod时，等待时间
+      containers:
+        - name: proxy
+          image: tool/lan-proxy:1.0.00-release
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: APP_NAME
+              value: proxy
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          volumeMounts:
+            - name: client-data  #必须有名称
+              mountPath: /app/data/ #机子内目录
+            - name: config-volume
+              mountPath: /app/conf/
+          resources:
+            limits:
+              cpu: 1
+              memory: 1024Mi
+            requests:
+              cpu: 0.5
+              memory: 125Mi
+          readinessProbe:              #就绪探针
+            tcpSocket:
+              port: 8090
+            initialDelaySeconds: 20    #延迟加载时间
+            periodSeconds: 5           #重试时间间隔
+            timeoutSeconds: 10         #超时时间设置
+            failureThreshold: 5        #探测失败的重试次数
+          livenessProbe:               #存活探针
+            tcpSocket:
+              port: 8090
+            initialDelaySeconds: 60    #延迟加载时间
+            periodSeconds: 5           #重试时间间隔
+            timeoutSeconds: 5          #超时时间设置
+            failureThreshold: 3        #探测失败的重试次数
+      volumes:
+        - name: config-volume
+          configMap:
+            # Provide the name of the ConfigMap containing the files you want
+            # to add to the container
+            name: lan-proxy-config  #把configMap挂载成机子内的文件
+            items:
+              - key: config
+                path: config.properties
+        - name: client-data #挂载本机文件
+          hostPath:
+            path: /usr/local/lan-proxy/data      #宿主机挂载点

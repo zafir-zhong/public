@@ -1,0 +1,57 @@
+package ${package}.${moduleName}.entity;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
+
+#if(${hasBigDecimal})
+import java.math.BigDecimal;
+#end
+import java.io.Serializable;
+import java.util.Date;
+#if(${hasLombok})
+import lombok.Data;
+#end
+#if(${hasSwagger})
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+#end
+
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @email ${email}
+ * @date ${datetime}
+ * @version ${version}
+ */
+#if(${hasLombok})
+@Data
+#end
+#if(${hasSwagger})
+@ApiModel(value = "${comments}")
+#end
+@TableName("${tableName}")
+public class ${className}Entity implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+#foreach ($column in $columns)
+	/**
+	 * $column.comments
+	 */
+#if($column.columnName == $pk.columnName)
+    @TableId(type= IdType.AUTO, value = "$column.columnName")
+#end
+#if($column.columnName != $pk.columnName)
+    @TableField(value = "$column.columnName")
+#end
+#if(${hasSwagger})
+    @ApiModelProperty(value = "$column.comments")
+#end
+    private $column.attrType $column.attrname;
+#end
+
+
+}
