@@ -4,6 +4,7 @@ apiVersion: v1
 metadata:
   name: lan-proxy-config
   namespace: tool
+# 这种方式会完整锁定指定目录无法重新覆盖，所以被放弃了，直接使用目录挂载+节点亲和
 data:
   # example of a simple property defined using --from-literal
   config: "
