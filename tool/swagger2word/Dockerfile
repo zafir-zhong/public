@@ -5,7 +5,7 @@ FROM openjdk:8-jdk-alpine
 RUN \
     ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     echo "Asia/Shanghai" > /etc/timezone && \
-    mkdir -p /app
+    mkdir -p /app0
 # 路径请自行核对
 ADD  /target/Swagger2Word-exec.jar /app/swagger2word.jar
 
