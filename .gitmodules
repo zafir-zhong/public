@@ -1,0 +1,20 @@
+[submodule "swagger2word"]
+	path = swagger2word
+	url = https://github.com/zafir-zhong/swagger2word.git
+	branch = master
+[submodule "lanproxy"]
+	path = lanproxy
+	url = https://github.com/zafir-zhong/lanproxy.git
+	branch = master
+[submodule "mybatis-generator"]
+	path = mybatis-generator
+	url = https://github.com/zafir-zhong/mybatis-generator.git
+	branch = master
+[submodule "simaple-service"]
+	path = simaple-service
+	url = https://github.com/zafir-zhong/simaple-service.git
+	branch = master
+[submodule "sentinel"]
+	path = sentinel
+	url = https://github.com/zafir-zhong/sentinel.git
+	branch = master
