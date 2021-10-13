@@ -20,4 +20,4 @@
 	branch = master
 [submodule "docker-images"]
 	path = docker-images
-	url = https://github.com/zafir-zhong/images
+	url = https://github.com/zafir-zhong/images.git
