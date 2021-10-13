@@ -1,5 +1,5 @@
 **这个仓库关联其他仓库，其他仓库作为子模块**  
-# tool
+# 模块
 本文件会聚合各种工具服务  
 并且会生成一个便于docker（k8s）部署的版本
 ## lanproxy
@@ -22,5 +22,12 @@ k8s部署逻辑为：通过挂载本地目录覆盖config内容，并通过节�
 
 
 
-# simple-service
+## simple-service
 提供一个模拟服务的模板，分别有个参数控制进入返回成功还是失败的文件
+
+
+## docker-images
+一个拉取外网镜像的简单脚本，开源根据自己需要随意修改
+
+# 致谢
+感谢[JetBrains](https://www.jetbrains.com/)提供的开发工具支持
