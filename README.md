@@ -28,6 +28,8 @@ k8s部署逻辑为：通过挂载本地目录覆盖config内容，并通过节�
 
 ## docker-images
 一个拉取外网镜像的简单脚本，开源根据自己需要随意修改
+# 参与
+如果有建议或意见，请在issues提出
 
 # 致谢
 感谢[JetBrains](https://www.jetbrains.com/)提供的开发工具支持
