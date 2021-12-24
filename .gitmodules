@@ -21,3 +21,7 @@
 [submodule "docker-images"]
 	path = docker-images
 	url = https://github.com/zafir-zhong/images.git
+[submodule "QRCode"]
+	path = QRCode
+	url = https://github.com/zafir-zhong/QRCode.git
+	branch = master
