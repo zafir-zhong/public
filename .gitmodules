@@ -25,3 +25,6 @@
 	path = QRCode
 	url = https://github.com/zafir-zhong/QRCode.git
 	branch = master
+[submodule "k8s"]
+	path = k8s
+	url = https://github.com/zafir-zhong/k8s.git
